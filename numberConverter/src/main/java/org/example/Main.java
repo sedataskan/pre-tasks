@@ -1,7 +1,7 @@
 package org.example;
 
 import org.example.factory.TranslatorFactory;
-import org.example.language.NumberTranslator;
+import org.example.product.NumberTranslator;
 
 import java.util.List;
 import java.util.Scanner;

@@ -81,7 +81,7 @@ public class TestApp {
     @Test
     void testTranslateEnglishForBigger() {
 
-        String expected = "Something went wrong";
+        String expected = "ten thousand ten";
         String result = TranslatorFactory.create("e").translate(10010);
 
         assertEquals(expected, result);
