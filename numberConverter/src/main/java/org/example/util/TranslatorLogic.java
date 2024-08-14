@@ -10,6 +10,7 @@ import java.util.Objects;
 public class TranslatorLogic {
     public static String logic(String lang, int input){
 
+        //get words from languages enum list
         String[] ones;
         String[] ten = null;
         String[] tens;
@@ -27,16 +28,19 @@ public class TranslatorLogic {
         }
         String numberAsString = String.valueOf(input);
 
+        //find digit count
         int digitNumber = (int)Math.log10(input) + 1;
 
+        //we will use each three digits as a group like 1.234.567
+        //so convert number to divisible by 3
         if (digitNumber % 3 == 1){
             numberAsString = "00" + numberAsString;
         }else if (digitNumber % 3 == 2){
             numberAsString = "0" + numberAsString;
         }
-
         List<String> coupleOfDigits = List.of(numberAsString.split("(?<=\\G.{" + 3 + "})"));
 
+        // 123456 gets -> 456 123 so we reversed
         List<String> reversed = new ArrayList<>();
 
         for (int i = coupleOfDigits.size(); i > 0; i--) {
