@@ -1,5 +1,8 @@
 package org.example.product;
 
+import org.example.util.GetStringFromInput;
+import org.example.util.GetStringFromList;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,81 +11,44 @@ public class NumberTranslatorEn implements NumberTranslator {
     @Override
     public String translate(int input) {
 
+        if (input == 0){
+            return "zero";
+        }
+
         String[] ones = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
         String[] ten = {"ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
         String[] tens = {"", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
         String[] postfix = {"", "hundred", "thousand", "million", "billion", "trillion"};
 
-        if (input == 0){
-            return "zero";
-        }
-        String numberAsString = String.valueOf(input);
+        List<String> coupleOfDigit = GetStringFromInput.getStringFromInput(input);
 
-        //find digit count
-        int digitNumber = (int)Math.log10(input) + 1;
-
-        //we will use each three digits as a group like 1.234.567
-        //so convert number to divisible by 3
-        if (digitNumber % 3 == 1){
-            numberAsString = "00" + numberAsString;
-        }else if (digitNumber % 3 == 2){
-            numberAsString = "0" + numberAsString;
-        }
-        List<String> coupleOfDigits = List.of(numberAsString.split("(?<=\\G.{" + 3 + "})"));
-
-        // 123456 gets -> 456 123 so we reversed
-        List<String> reversed = new ArrayList<>();
-
-        for (int i = coupleOfDigits.size(); i > 0; i--) {
-            reversed.add(coupleOfDigits.get(i - 1));
-        }
-
-        coupleOfDigits = reversed;
-
-        List<String> numberAsStr = new ArrayList<>();
-
+        int len = coupleOfDigit.size();
         int digitHundred;
         int digitTen;
         int digitOne;
-        String power = "";
+        String hund;
+        String power;
 
-        for (int i = 0; i<coupleOfDigits.size() ; i++){
-            digitHundred = Character.getNumericValue(coupleOfDigits.get(i).charAt(0));
-            digitTen = Character.getNumericValue(coupleOfDigits.get(i).charAt(1));
-            digitOne = Character.getNumericValue(coupleOfDigits.get(i).charAt(2));
+        List<String> stringNumbers = new ArrayList<>();
 
-            if(i == 1){
-                power = postfix[2];
-            } else if (i == 2) {
-                power = postfix[3];
-            } else if (i == 3) {
-                power = postfix[4];
-            } else if (i == 4) {
-                power = postfix[5];
-            }
+        for (int i = 0; i < coupleOfDigit.size(); i++, len--) {
+            digitHundred = Character.getNumericValue(coupleOfDigit.get(i).charAt(0));
+            digitTen = Character.getNumericValue(coupleOfDigit.get(i).charAt(1));
+            digitOne = Character.getNumericValue(coupleOfDigit.get(i).charAt(2));
 
-            String hund;
-            if(digitHundred == 0){
-                hund = "";
-            }else {
-                hund = postfix[1];
-            }
+            hund = digitHundred == 0 ? " " : postfix[1];
+            power = len > 1 ? postfix[len] : "";
 
-            if(digitTen == 1){
-                numberAsStr.addFirst(ones[digitHundred] + " " + hund + " " + ten[digitOne] + " " + power);
-            }
-            else {
-                numberAsStr.addFirst(ones[digitHundred] + " " + hund + " " + tens[digitTen] + " " + ones[digitOne] + " " + power);
+            if (digitTen == 1) {
+                stringNumbers.add(ones[digitHundred] + " " + hund + " " + ten[digitOne] + " " + power);
+            } else {
+                stringNumbers.add(ones[digitHundred] + " " + hund + " " + tens[digitTen] + " " + ones[digitOne] + " " + power);
             }
         }
 
-        StringBuilder translatedNumber = new StringBuilder();
-        for (String ch : numberAsStr) {
-            translatedNumber.append(ch.trim()).append(" ");
-        }
+        String translatedNumber = GetStringFromList.getStringFromList(stringNumbers);
 
         return translatedNumber
-                .toString()
                 .replaceAll("\\s+"," ")
                 .trim();
     }
