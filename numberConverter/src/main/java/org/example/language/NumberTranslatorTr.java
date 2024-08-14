@@ -17,6 +17,10 @@ public class NumberTranslatorTr implements NumberTranslator {
 
         String numberAsString = String.valueOf(input);
 
+        if (input == 0){
+            return "sıfır";
+        }
+
         int digitNumber = (int)Math.log10(input) + 1;
 
         if (digitNumber % 3 == 1){

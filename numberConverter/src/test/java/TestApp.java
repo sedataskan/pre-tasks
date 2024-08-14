@@ -131,9 +131,9 @@ public class TestApp {
     }
 
     @Test
-    void testTranslateTurkishForBigger() {
+    void testTranslateTurkishForFiveDigits() {
 
-        String expected = "Bir şeyler ters gitti";
+        String expected = "yirmi bin on beş";
         String result = TranslatorFactory.create("t").translate(20015);
 
         assertEquals(expected, result);
