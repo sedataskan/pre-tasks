@@ -11,28 +11,46 @@ public class NumberTranslatorEn implements NumberTranslator {
         String[] ones = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
         String[] ten = {"ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
         String[] tens = {"", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
-        String[] power = {"", "", "hundred", "thousand", "million", "billion", "trillion"};
+        String[] power = {"", "ten", "hundred", "thousand", "million", "billion", "trillion"};
 
         List<String> numberAsStr = new ArrayList<>();
-        int digitNum = 0;
 
-        if (input == 0) {
-            numberAsStr.add("zero");
-        }
+        int digitNumber = (int)Math.log10(input) + 1;
 
-        while (input > 0) {
-            int digit = input % 10;
-
-            if (digitNum == 0) {
-                numberAsStr.addFirst(ones[digit]);
-            } else if (digitNum == 1) {
-                numberAsStr.addFirst(tens[digit]);
-            } else if (digitNum > 1) {
-                numberAsStr.addFirst(ones[digit] +  " " + power[digitNum]);
-            }
-
-            digitNum = digitNum + 1;
-            input /= 10;
+        switch(digitNumber){
+            case 1:
+                numberAsStr.add(ones[input]);
+                break;
+            case 2:
+                if (input >= 10 && input < 20) {
+                    numberAsStr.add(ten[input%10]);
+                } else {
+                    numberAsStr.add(tens[input/10] + " " + ones[input % 10]);
+                }
+                break;
+            case 3:
+                if (input%100 >= 10 && input%100 < 20) {
+                    numberAsStr.add(ones[(input/100)] + " " + power[2] + " " + ten[input%10]);
+                }
+                else {
+                    numberAsStr.add(ones[(input/100)] + " " + power[2] + " " + tens[(input/10)%10] + " " + ones[input%10]);
+                }
+                break;
+            case 4:
+                if (input%100 >= 10 && input%100 < 20) {
+                    numberAsStr.add(ones[(input/1000)] + " " + power[3] + " " + ten[input%10]);
+                }
+                else{
+                    numberAsStr.add(ones[(input/1000)] + " " + power[3] + " " + ones[(input/100)%10] + " " + power[2] + " " + tens[(input/10)%10] + " " + ones[input%10]);
+                }
+                break;
+            default:
+                if (input == 0){
+                    numberAsStr.add("zero");
+                } else{
+                    numberAsStr.add("Something went wrong");
+                }
+                break;
         }
 
         StringBuilder translatedNumber = new StringBuilder();
@@ -40,6 +58,6 @@ public class NumberTranslatorEn implements NumberTranslator {
             translatedNumber.append(ch).append(" ");
         }
 
-        return translatedNumber.toString();
+        return translatedNumber.toString().replaceAll("\\s+"," ").trim();
     }
 }

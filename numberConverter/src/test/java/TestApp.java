@@ -7,19 +7,73 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestApp {
     @Test
-    void testTranslateEnglish() {
+    void testTranslateEnglishForZero() {
 
-        String expected = "one hundred twenty three ";
-        String result = TranslatorFactory.create("e").translate(123);
+        String expected = "zero";
+        String result = TranslatorFactory.create("e").translate(0);
 
         assertEquals(expected, result);
     }
 
     @Test
-    void testTranslateEnglishForZero() {
+    void testTranslateEnglishForOneDigit() {
 
-        String expected = "zero ";
-        String result = TranslatorFactory.create("e").translate(0);
+        String expected = "two";
+        String result = TranslatorFactory.create("e").translate(2);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateEnglishForTwoDigitsTen() {
+
+        String expected = "fifteen";
+        String result = TranslatorFactory.create("e").translate(15);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateEnglishForTwoDigits() {
+
+        String expected = "sixty seven";
+        String result = TranslatorFactory.create("e").translate(67);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateEnglishForThreeDigits() {
+
+        String expected = "one hundred thirty seven";
+        String result = TranslatorFactory.create("e").translate(137);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateEnglishForThreeDigitsTen() {
+
+        String expected = "two hundred nineteen";
+        String result = TranslatorFactory.create("e").translate(219);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateEnglishForFourDigitsTen() {
+
+        String expected = "two thousand fourteen";
+        String result = TranslatorFactory.create("e").translate(2014);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateEnglishForFourDigits() {
+
+        String expected = "one thousand nine hundred seven";
+        String result = TranslatorFactory.create("e").translate(1907);
 
         assertEquals(expected, result);
     }
@@ -27,17 +81,8 @@ public class TestApp {
     @Test
     void testTranslateEnglishForBigger() {
 
-        String expected = "one thousand one ";
-        String result = TranslatorFactory.create("e").translate(1001);
-
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void testTranslateTurkish() {
-
-        String expected = "yüz yirmi üç ";
-        String result = TranslatorFactory.create("t").translate(123);
+        String expected = "Something went wrong";
+        String result = TranslatorFactory.create("e").translate(10010);
 
         assertEquals(expected, result);
     }
@@ -52,10 +97,44 @@ public class TestApp {
     }
 
     @Test
+    void testTranslateTurkishForOneDigit() {
+        String expected = "üç";
+        String result = TranslatorFactory.create("t").translate(3);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateTurkishForTwoDigits() {
+        String expected = "otuz beş";
+        String result = TranslatorFactory.create("t").translate(35);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateTurkishForThreeDigits() {
+
+        String expected = "üç yüz yirmi dört";
+        String result = TranslatorFactory.create("t").translate(324);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateTurkishForFourDigits() {
+
+        String expected = "iki bin bir";
+        String result = TranslatorFactory.create("t").translate(2001);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
     void testTranslateTurkishForBigger() {
 
-        String expected = "bin bir ";
-        String result = TranslatorFactory.create("t").translate(1001);
+        String expected = "Bir şeyler ters gitti";
+        String result = TranslatorFactory.create("t").translate(20015);
 
         assertEquals(expected, result);
     }

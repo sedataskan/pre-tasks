@@ -12,28 +12,37 @@ public class NumberTranslatorTr implements NumberTranslator {
         String[] tens = {"", "on", "yirmi", "otuz", "kırk", "elli", "altmış", "yetmiş", "seksen", "doksan"};
         String[] power = {"", "on", "yüz", "bin", "milyon", "milyar", "trilyon"};
 
+        int digitNumber = (int)Math.log10(input) + 1;
+
         List<String> numberAsStr = new ArrayList<>();
 
-        //digit counter
-        int digitCount = 0;
-        while (input>0) {
-            input /= 10;
-            ++digitCount;
-        }
-
-        if (input == 0) {
-            numberAsStr.add("sıfır");
-        }
-
-        while (digitCount > 0){
-            //TODO need a new logic
+        switch(digitNumber){
+            case 1:
+                numberAsStr.add(ones[input]);
+                break;
+            case 2:
+                numberAsStr.add(tens[input/10] + " " + ones[input % 10]);
+                break;
+            case 3:
+                numberAsStr.add(ones[(input/100)] + " " + power[2] + " " + tens[(input/10)%10] + " " + ones[input%10]);
+                break;
+            case 4:
+                numberAsStr.add(ones[(input/1000)] + " " + power[3] + " " + ones[(input/100)%10] + " " + power[(input/100)%10] + " " + tens[(input/10)%10] + " " + ones[input%10]);
+                break;
+            default:
+                if (input == 0){
+                    numberAsStr.add("sıfır");
+                } else{
+                    numberAsStr.add("Bir şeyler ters gitti");
+                }
+                break;
         }
 
         StringBuilder translatedNumber = new StringBuilder();
         for (String ch : numberAsStr) {
-            translatedNumber.append(ch).append(" ");
+            translatedNumber.append(ch.trim()).append(" ");
         }
 
-        return translatedNumber.toString();
+        return translatedNumber.toString().replaceAll("\\s+"," ").trim();
     }
 }
