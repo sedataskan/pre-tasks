@@ -1,21 +1,21 @@
 package org.example.util;
 
 import org.example.enums.EngNumberWords;
-import org.example.enums.Language;
 import org.example.enums.TrNumberWords;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TranslatorLogic {
-    public static String logic(Language lang, int input){
+    public static String logic(String lang, int input){
 
         String[] ones;
         String[] ten = null;
         String[] tens;
         String[] postfix;
 
-        if(lang == Language.e){
+        if(Objects.equals(lang, "e")){
             ones = EngNumberWords.ONES.getEngNumberWords();
             ten = EngNumberWords.TEN.getEngNumberWords();
             tens = EngNumberWords.TENS.getEngNumberWords();
@@ -74,7 +74,7 @@ public class TranslatorLogic {
                 hund = postfix[1];
             }
 
-            if(digitTen == 1 && lang == Language.e){
+            if(digitTen == 1 && Objects.equals(lang, "e")){
                 numberAsStr.addFirst(ones[digitHundred] + " " + hund + " " + ten[digitOne] + " " + power);
             }
             else {

@@ -1,6 +1,5 @@
 package org.example.product;
 
-import org.example.enums.Language;
 import org.example.util.TranslatorLogic;
 
 
@@ -13,8 +12,7 @@ public class NumberTranslatorEn implements NumberTranslator {
             return "zero";
         }
 
-        Language lang = Language.e;
-        String result = TranslatorLogic.logic(lang, input);
+        String result = TranslatorLogic.logic("e", input);
 
         return result
                 .replaceAll("\\s+"," ")
