@@ -20,7 +20,7 @@ public class Main {
         }
 
         System.out.println("Your int Input: ");
-        int input = scanner.nextInt();
+        String input = scanner.nextLine();
 
         NumberTranslator translator = TranslatorFactory.create(lang);
         var result = translator.translate(input);

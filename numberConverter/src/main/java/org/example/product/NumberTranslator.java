@@ -1,5 +1,5 @@
 package org.example.product;
 
 public interface NumberTranslator {
-    String translate(int input);
+    String translate(String input);
 }

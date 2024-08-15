@@ -1,57 +1,54 @@
 package org.example.product;
 
 import org.example.util.NumberParser;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 public class NumberTranslatorEn implements NumberTranslator {
 
     @Override
-    public String translate(int input) {
+    public String translate(String input) {
 
-        if (input == 0){
-            return "zero";
+        if (Objects.equals(input, "0")){
+            return "Zero";
         }
 
-        String[] ones = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-        String[] ten = {"ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
-        String[] tens = {"", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
-        String[] postfix = {"", "hundred", "thousand", "million", "billion", "trillion"};
+        String[] ones = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
+        String[] ten = {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+        String[] tens = {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+        String[] postfix = {"", "Thousand", "Million", "Billion", "Trillion"};
 
-        List<String> coupleOfDigit = NumberParser.parseAsTriple(input);
+        var sb = new StringBuilder();
 
-        int len = coupleOfDigit.size();
-        int digitHundred;
-        int digitTen;
-        int digitOne;
-        String hund;
-        String power;
+        if(input.contains("-")){
+            input = input.replace("-", "");
+            sb.append("Minus(-)");
+        }
 
-        List<String> stringNumbers = new ArrayList<>();
+        var triples = NumberParser.parseAsTriple(input);
+        if (triples.size() > postfix.length) {
+            return "I cannot translate these numbers. Please enter a smaller number.";
+        }
 
-        for (int i = 0; i < coupleOfDigit.size(); i++, len--) {
-            digitHundred = Character.getNumericValue(coupleOfDigit.get(i).charAt(0));
-            digitTen = Character.getNumericValue(coupleOfDigit.get(i).charAt(1));
-            digitOne = Character.getNumericValue(coupleOfDigit.get(i).charAt(2));
+        for (int i = 0; i < triples.size(); i++) {
+            var digitHundred = Character.getNumericValue(triples.get(i).charAt(0));
+            var digitTen = Character.getNumericValue(triples.get(i).charAt(1));
+            var digitOne = Character.getNumericValue(triples.get(i).charAt(2));
 
-            hund = digitHundred == 0 ? " " : postfix[1];
-            power = len > 1 ? postfix[len] : "";
-
-            if (digitTen == 1) {
-                stringNumbers.add(ones[digitHundred] + " " + hund + " " + ten[digitOne] + " " + power);
-            } else {
-                stringNumbers.add(ones[digitHundred] + " " + hund + " " + tens[digitTen] + " " + ones[digitOne] + " " + power);
+            if (digitHundred > 0) {
+                sb.append(ones[digitHundred]);
+                sb.append("Hundred");
             }
+            if (digitTen > 1) {
+                sb.append(tens[digitTen]);
+            }
+            if (digitTen == 1) {
+                sb.append(ten[digitOne]);
+            }
+            if (digitOne > 0 && digitTen != 1) {
+                sb.append(ones[digitOne]);
+            }
+            sb.append(postfix[triples.size() - i - 1]);
         }
-
-        StringBuilder translatedNumber= new StringBuilder();
-        for(var s:stringNumbers){
-            translatedNumber.append(s);
-        }
-
-        return translatedNumber.toString()
-                .replaceAll("\\s+"," ")
-                .trim();
+        return sb.toString();
     }
 }

@@ -9,8 +9,8 @@ public class NumberTranslatorEnTest {
     @Test
     void testTranslateEnglishForZero() {
 
-        String expected = "zero";
-        String result = TranslatorFactory.create("e").translate(0);
+        String expected = "Zero";
+        String result = TranslatorFactory.create("e").translate("0");
 
         assertEquals(expected, result);
     }
@@ -18,8 +18,8 @@ public class NumberTranslatorEnTest {
     @Test
     void testTranslateEnglishForOneDigit() {
 
-        String expected = "two";
-        String result = TranslatorFactory.create("e").translate(2);
+        String expected = "Two";
+        String result = TranslatorFactory.create("e").translate("2");
 
         assertEquals(expected, result);
     }
@@ -27,8 +27,8 @@ public class NumberTranslatorEnTest {
     @Test
     void testTranslateEnglishForTwoDigitsTen() {
 
-        String expected = "fifteen";
-        String result = TranslatorFactory.create("e").translate(15);
+        String expected = "Fifteen";
+        String result = TranslatorFactory.create("e").translate("15");
 
         assertEquals(expected, result);
     }
@@ -36,8 +36,8 @@ public class NumberTranslatorEnTest {
     @Test
     void testTranslateEnglishForTwoDigits() {
 
-        String expected = "sixty seven";
-        String result = TranslatorFactory.create("e").translate(67);
+        String expected = "SixtySeven";
+        String result = TranslatorFactory.create("e").translate("67");
 
         assertEquals(expected, result);
     }
@@ -45,8 +45,8 @@ public class NumberTranslatorEnTest {
     @Test
     void testTranslateEnglishForThreeDigits() {
 
-        String expected = "one hundred thirty seven";
-        String result = TranslatorFactory.create("e").translate(137);
+        String expected = "OneHundredThirtySeven";
+        String result = TranslatorFactory.create("e").translate("137");
 
         assertEquals(expected, result);
     }
@@ -54,8 +54,8 @@ public class NumberTranslatorEnTest {
     @Test
     void testTranslateEnglishForThreeDigitsTen() {
 
-        String expected = "two hundred nineteen";
-        String result = TranslatorFactory.create("e").translate(219);
+        String expected = "TwoHundredNineteen";
+        String result = TranslatorFactory.create("e").translate("219");
 
         assertEquals(expected, result);
     }
@@ -63,8 +63,8 @@ public class NumberTranslatorEnTest {
     @Test
     void testTranslateEnglishForFourDigitsTen() {
 
-        String expected = "two thousand fourteen";
-        String result = TranslatorFactory.create("e").translate(2014);
+        String expected = "TwoThousandSixHundredFourteen";
+        String result = TranslatorFactory.create("e").translate("2614");
 
         assertEquals(expected, result);
     }
@@ -72,8 +72,17 @@ public class NumberTranslatorEnTest {
     @Test
     void testTranslateEnglishForFourDigits() {
 
-        String expected = "one thousand nine hundred seven";
-        String result = TranslatorFactory.create("e").translate(1907);
+        String expected = "OneThousandNineHundredSeven";
+        String result = TranslatorFactory.create("e").translate("1907");
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateEnglishForFiveDigits() {
+
+        String expected = "TenThousandTen";
+        String result = TranslatorFactory.create("e").translate("10010");
 
         assertEquals(expected, result);
     }
@@ -81,8 +90,26 @@ public class NumberTranslatorEnTest {
     @Test
     void testTranslateEnglishForBigger() {
 
-        String expected = "ten thousand ten";
-        String result = TranslatorFactory.create("e").translate(10010);
+        String expected = "FiveBillionFiveHundredTwentyThreeMillionFourHundredFiftySevenThousandSixHundredThirtyFour";
+        String result = TranslatorFactory.create("e").translate("5523457634");
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateEnglishForTooLongNumber() {
+
+        String expected = "I cannot translate these numbers. Please enter a smaller number.";
+        String result = TranslatorFactory.create("e").translate("5523457634777777");
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateEnglishForNegative() {
+
+        String expected = "Minus(-)OneHundredFiftyNine";
+        String result = TranslatorFactory.create("e").translate("-159");
 
         assertEquals(expected, result);
     }
