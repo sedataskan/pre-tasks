@@ -1,52 +1,50 @@
 package org.example.product;
 
-import org.example.util.GetStringFromInput;
-import org.example.util.GetStringFromList;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.example.util.NumberParser;
 
 public class NumberTranslatorTr implements NumberTranslator {
 
     @Override
     public String translate(int input) {
 
-        if (input == 0){
-            return "sıfır";
+        if (input == 0) {
+            return "Sıfır";
         }
 
-        String[] ones = {"", "bir", "iki", "üç", "dört", "beş", "altı", "yedi", "sekiz", "dokuz"};
-        String[] tens = {"", "on", "yirmi", "otuz", "kırk", "elli", "altmış", "yetmiş", "seksen", "doksan"};
-        String[] postfix = {"", "yüz", "bin", "milyon", "milyar", "trilyon"};
+        String[] ones = {"", "Bir", "İki", "Üç", "Dört", "Beş", "Altı", "Yedi", "Sekiz", "Dokuz"};
+        String[] tens = {"", "On", "Yirmi", "Otuz", "Kırk", "Elli", "Altmış", "Yetmiş", "Seksen", "Doksan"};
+        String[] postfix = {"Bin", "Milyon", "Milyar", "Trilyon"};
 
-        List<String> coupleOfDigit = GetStringFromInput.getStringFromInput(input);
+        var triples = NumberParser.parseAsTriple(input);
 
-        int len = coupleOfDigit.size();
-        int digitHundred;
-        int digitTen;
-        int digitOne;
-        String hund;
-        String power;
+        var sb = new StringBuilder();
 
-        List<String> stringNumbers = new ArrayList<>();
+        System.out.println(triples);
 
-        for (int i = 0; i < coupleOfDigit.size(); i++, len--) {
-            digitHundred = Character.getNumericValue(coupleOfDigit.get(i).charAt(0));
-            digitTen = Character.getNumericValue(coupleOfDigit.get(i).charAt(1));
-            digitOne = Character.getNumericValue(coupleOfDigit.get(i).charAt(2));
+        for (int i = 0; i < triples.size(); i++) {
+            var digitHundred = Character.getNumericValue(triples.get(i).charAt(0));
+            var digitTen = Character.getNumericValue(triples.get(i).charAt(1));
+            var digitOne = Character.getNumericValue(triples.get(i).charAt(2));
 
-            hund = digitHundred == 0 ? " " : postfix[1];
-            power = len > 1 ? postfix[len] : "";
-            
-            stringNumbers.add(ones[digitHundred] + " " + hund + " " + tens[digitTen] + " " + ones[digitOne] + " " + power);
+            if (digitHundred > 0) {
+                if (digitHundred > 1)
+                    sb.append(ones[digitHundred]);
+                sb.append("Yüz");
+            }
+            if (digitTen > 0) {
+                sb.append(tens[digitTen]);
+            }
+            if (digitOne > 0) {
+                if (digitOne == 1 && digitHundred == 0 && digitTen == 0 && i<1){
+                    sb.append("Bir");
+                } else {
+                    sb.append(ones[digitOne]);
+                }
+            }
+            if (i > 0) {
+                sb.append(postfix[i-1]);
+            }
         }
-
-        String translatedNumber = GetStringFromList.getStringFromList(stringNumbers);
-
-        return translatedNumber
-                .replaceAll("\\s+"," ")
-                .trim()
-                .replace("bir yüz", "yüz")
-                .replace("bir bin", "bin");
+        return sb.toString();
     }
 }

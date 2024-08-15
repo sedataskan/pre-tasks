@@ -1,7 +1,6 @@
 package org.example.product;
 
-import org.example.util.GetStringFromInput;
-import org.example.util.GetStringFromList;
+import org.example.util.NumberParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ public class NumberTranslatorEn implements NumberTranslator {
         String[] tens = {"", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
         String[] postfix = {"", "hundred", "thousand", "million", "billion", "trillion"};
 
-        List<String> coupleOfDigit = GetStringFromInput.getStringFromInput(input);
+        List<String> coupleOfDigit = NumberParser.parseAsTriple(input);
 
         int len = coupleOfDigit.size();
         int digitHundred;
@@ -46,9 +45,12 @@ public class NumberTranslatorEn implements NumberTranslator {
             }
         }
 
-        String translatedNumber = GetStringFromList.getStringFromList(stringNumbers);
+        StringBuilder translatedNumber= new StringBuilder();
+        for(var s:stringNumbers){
+            translatedNumber.append(s);
+        }
 
-        return translatedNumber
+        return translatedNumber.toString()
                 .replaceAll("\\s+"," ")
                 .trim();
     }
