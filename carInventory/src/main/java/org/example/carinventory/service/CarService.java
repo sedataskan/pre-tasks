@@ -1,10 +1,11 @@
 package org.example.carinventory.service;
 
+import org.example.carinventory.dto.BaseResponse;
 import org.example.carinventory.model.Car;
 import org.springframework.http.ResponseEntity;
 
 public interface CarService {
-    ResponseEntity<?> getAllCars();
+    BaseResponse<Iterable<Car>> getAllCars();
 
     ResponseEntity<?> getCarById(String id);
 

@@ -1,6 +1,7 @@
 package org.example.carinventory.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.carinventory.dto.BaseResponse;
 import org.example.carinventory.model.Car;
 import org.example.carinventory.service.CarService;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,9 @@ public class CarController {
     private final CarService carService;
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllCars() {
+    public BaseResponse<Iterable<Car>> getAllCars() {
         //TODO: Global exception handler olsun
         return carService.getAllCars();
-
     }
 
     @GetMapping("/{id}")
@@ -33,21 +33,18 @@ public class CarController {
     public ResponseEntity<?> createCar(@RequestBody Car car) {
 
         return carService.createCar(car);
-
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> editCarById(@RequestBody Car car, @PathVariable String id) {
 
         return carService.updateCar(car, id);
-
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCar(@PathVariable String id) {
 
         return carService.deleteCarById(id);
-
     }
 
 }

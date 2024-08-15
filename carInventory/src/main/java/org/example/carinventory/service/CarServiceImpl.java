@@ -1,6 +1,9 @@
 package org.example.carinventory.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.IterableUtils;
+import org.example.carinventory.dto.BaseResponse;
+import org.example.carinventory.exception.NoCarOnInventoryException;
 import org.example.carinventory.model.Car;
 import org.example.carinventory.repository.CarRepository;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +18,19 @@ public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
 
-    //TODO: Car listesi dönsün
-    public ResponseEntity<?> getAllCars() {
+    //TODO: Car listesi dönsün *
+    public BaseResponse<Iterable<Car>> getAllCars() {
         var cars = carRepository.findAll();
-        //TODO: hiç araba yoksa Http-204 dönsün
-        return ResponseEntity.ok(cars.toString());
+        //TODO: hiç araba yoksa Http-204 dönsün *
+        if (IterableUtils.size(cars) == 0){
+            throw new NoCarOnInventoryException("No car on inventory");
+        }
+        return BaseResponse
+                .<Iterable<Car>>builder()
+                .status(true)
+                .message("Cars has found!")
+                .payload(cars)
+                .build();
     }
 
     public ResponseEntity<?> getCarById(String id) {
