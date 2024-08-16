@@ -1,10 +1,10 @@
 package org.example.carinventory.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.carinventory.dto.BaseResponse;
 import org.example.carinventory.model.Car;
 import org.example.carinventory.service.CarService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,39 +12,51 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CarController {
 
-    //todo: Entity yerine DTO kullanalım.
-
     private final CarService carService;
 
     @GetMapping("/")
-    public BaseResponse<Iterable<Car>> getAllCars() {
-        //TODO: Global exception handler olsun
-        return carService.getAllCars();
+    public BaseResponse<Object> getAllCars() {
+        return BaseResponse
+                .builder()
+                .status(true)
+                .payload(carService.getAllCars())
+                .build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCarById(@PathVariable String id) {
-
-        return carService.getCarById(id);
-
+    public BaseResponse<Object> getCarById(@PathVariable String id) {
+        return BaseResponse
+                .builder()
+                .status(true)
+                .payload(carService.getCarById(id))
+                .build();
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createCar(@RequestBody Car car) {
-
-        return carService.createCar(car);
+    public BaseResponse<Object> createCar(@RequestBody Car car, HttpServletResponse response) {
+        return BaseResponse
+                .builder()
+                .status(true)
+                .payload(carService.createCar(car, response))
+                .build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editCarById(@RequestBody Car car, @PathVariable String id) {
-
-        return carService.updateCar(car, id);
+    public BaseResponse<Object> editCarById(@RequestBody Car car, @PathVariable String id) {
+        return BaseResponse
+                .builder()
+                .status(true)
+                .payload(carService.updateCar(car, id))
+                .build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCar(@PathVariable String id) {
-
-        return carService.deleteCarById(id);
+    public BaseResponse<Object> deleteCar(@PathVariable String id) {
+        return BaseResponse
+                .builder()
+                .status(true)
+                .payload(carService.deleteCarById(id))
+                .build();
     }
 
 }

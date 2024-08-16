@@ -7,6 +7,5 @@ import lombok.Data;
 @Data
 public class BaseResponse<T> {
     private final Boolean status;
-    private final String message;
     private final T payload;
 }

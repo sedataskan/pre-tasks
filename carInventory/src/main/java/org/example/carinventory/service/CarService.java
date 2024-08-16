@@ -1,18 +1,18 @@
 package org.example.carinventory.service;
 
-import org.example.carinventory.dto.BaseResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.carinventory.model.Car;
-import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface CarService {
-    BaseResponse<Iterable<Car>> getAllCars();
+    List<Car> getAllCars();
 
-    ResponseEntity<?> getCarById(String id);
+    Car getCarById(String id);
 
-    ResponseEntity<?> createCar(Car car);
+    Car createCar(Car car, HttpServletResponse response);
 
-    ResponseEntity<?> updateCar(Car car, String id);
+    Car updateCar(Car car, String id);
 
-    ResponseEntity<?> deleteCarById(String id);
-    //TODO: metodlar buraya alınack
+    Car deleteCarById(String id);
 }

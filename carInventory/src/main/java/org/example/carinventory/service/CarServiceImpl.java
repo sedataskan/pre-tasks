@@ -1,15 +1,15 @@
 package org.example.carinventory.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.IterableUtils;
-import org.example.carinventory.dto.BaseResponse;
+import org.example.carinventory.exception.CarAlreadyExistsException;
+import org.example.carinventory.exception.CarNotFoundException;
 import org.example.carinventory.exception.NoCarOnInventoryException;
 import org.example.carinventory.model.Car;
 import org.example.carinventory.repository.CarRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -18,26 +18,27 @@ public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
 
-    //TODO: Car listesi dönsün *
-    public BaseResponse<Iterable<Car>> getAllCars() {
+    public List<Car> getAllCars() {
         var cars = carRepository.findAll();
-        //TODO: hiç araba yoksa Http-204 dönsün *
-        if (IterableUtils.size(cars) == 0){
+        if (cars.isEmpty()){
             throw new NoCarOnInventoryException("No car on inventory");
         }
-        return BaseResponse
-                .<Iterable<Car>>builder()
-                .status(true)
-                .message("Cars has found!")
-                .payload(cars)
-                .build();
+        return cars;
     }
 
-    public ResponseEntity<?> getCarById(String id) {
-        return ResponseEntity.ok(carRepository.findCarById(id));
+    public Car getCarById(String id) {
+        var cars = carRepository.findAll();
+        if (cars.isEmpty()){
+            throw new CarNotFoundException("There is no car for ID: " + id);
+        }
+        return carRepository.findCarById(id);
     }
 
-    public ResponseEntity<Car> createCar(Car car) {
+    public Car createCar(Car car, HttpServletResponse response) {
+        boolean isInInventory = carRepository.findCarByMotorAndColorAndModelAndYear(car.getMotor(), car.getColor(), car.getModel(), car.getYear());
+        if (isInInventory){
+            throw new CarAlreadyExistsException("Car already exists on inventory!");
+        }
         var newCar = Car.builder()
                 .id(UUID.randomUUID().toString())
                 .model(car.getModel())
@@ -46,12 +47,17 @@ public class CarServiceImpl implements CarService {
                 .motor(car.getMotor())
                 .build();
         carRepository.save(newCar);
-        return ResponseEntity.created(URI.create("/api/" + newCar.getId())).body(newCar);
+
+        String uri = "/api/Car/" + newCar.getId();
+        response.addHeader("Location", uri);
+        response.setStatus(HttpServletResponse.SC_CREATED); //201 -> successfully created
+
+        return newCar;
     }
 
-    public ResponseEntity<?> updateCar(Car car, String id) {
+    public Car updateCar(Car car, String id) {
         if (carRepository.findCarById(id) == null) {
-            return ResponseEntity.notFound().build();
+            throw new CarNotFoundException("There is no car for ID: " + id);
         }
         var newCar = Car.builder()
                 .id(id)
@@ -61,14 +67,15 @@ public class CarServiceImpl implements CarService {
                 .motor(car.getMotor())
                 .build();
         carRepository.save(newCar);
-        return ResponseEntity.ok("Car " + id + "Has Updated: \n" + newCar);
+        return car;
     }
 
-    public ResponseEntity<?> deleteCarById(String id) {
-        if (carRepository.findCarById(id) == null) {
-            return ResponseEntity.notFound().build();
+    public Car deleteCarById(String id) {
+        var car = carRepository.findCarById(id);
+        if (car == null) {
+            throw new CarNotFoundException("There is no car for ID: " + id);
         }
         carRepository.deleteById(id);
-        return ResponseEntity.ok("Car " + id + " Has Deleted");
+        return car;
     }
 }
