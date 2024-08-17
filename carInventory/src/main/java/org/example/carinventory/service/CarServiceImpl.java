@@ -1,7 +1,7 @@
 package org.example.carinventory.service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.carinventory.dto.CarDto;
 import org.example.carinventory.exception.CarAlreadyExistsException;
 import org.example.carinventory.exception.CarNotFoundException;
 import org.example.carinventory.exception.NoCarOnInventoryException;
@@ -9,6 +9,7 @@ import org.example.carinventory.model.Car;
 import org.example.carinventory.repository.CarRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,8 +18,9 @@ import java.util.UUID;
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
+    private final NotificationService notificationService;
 
-    public List<Car> getAllCars() {
+    public List<CarDto> getAllCars() {
         var cars = carRepository.findAll();
         if (cars.isEmpty()){
             throw new NoCarOnInventoryException("No car on inventory");
@@ -26,7 +28,7 @@ public class CarServiceImpl implements CarService {
         return cars;
     }
 
-    public Car getCarById(String id) {
+    public CarDto getCarById(String id) {
         var cars = carRepository.findAll();
         if (cars.isEmpty()){
             throw new CarNotFoundException("There is no car for ID: " + id);
@@ -34,8 +36,8 @@ public class CarServiceImpl implements CarService {
         return carRepository.findCarById(id);
     }
 
-    public Car createCar(Car car, HttpServletResponse response) {
-        boolean isInInventory = carRepository.findCarByMotorAndColorAndModelAndYear(car.getMotor(), car.getColor(), car.getModel(), car.getYear());
+    public CarDto createCar(Car car) {
+        boolean isInInventory = carRepository.findBySerialNumber(car.getSerialNumber());
         if (isInInventory){
             throw new CarAlreadyExistsException("Car already exists on inventory!");
         }
@@ -44,33 +46,33 @@ public class CarServiceImpl implements CarService {
                 .model(car.getModel())
                 .year(car.getYear())
                 .color(car.getColor())
-                .motor(car.getMotor())
+                .engine(car.getEngine())
+                .createdAt(LocalDate.now())
+                .updatedAt(LocalDate.now())
                 .build();
         carRepository.save(newCar);
-
-        String uri = "/api/Car/" + newCar.getId();
-        response.addHeader("Location", uri);
-        response.setStatus(HttpServletResponse.SC_CREATED); //201 -> successfully created
-
+        notificationService.send("a car created with this id: " + newCar.getId());
+        //buralar mapping
         return newCar;
     }
 
-    public Car updateCar(Car car, String id) {
-        if (carRepository.findCarById(id) == null) {
-            throw new CarNotFoundException("There is no car for ID: " + id);
+    public CarDto updateCar(Car car) {
+        if (carRepository.findCarById(car.getId()) == null) {
+            throw new CarNotFoundException("There is no car for ID: " + car.getId());
         }
         var newCar = Car.builder()
-                .id(id)
+                .id(car.getId())
                 .model(car.getModel())
                 .year(car.getYear())
                 .color(car.getColor())
-                .motor(car.getMotor())
+                .engine(car.getEngine())
                 .build();
         carRepository.save(newCar);
-        return car;
+        //buralarda mapping olucak
+        return newCar;
     }
 
-    public Car deleteCarById(String id) {
+    public CarDto deleteCarById(String id) {
         var car = carRepository.findCarById(id);
         if (car == null) {
             throw new CarNotFoundException("There is no car for ID: " + id);

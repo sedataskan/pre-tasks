@@ -1,18 +1,17 @@
 package org.example.carinventory.service;
 
-import jakarta.servlet.http.HttpServletResponse;
-import org.example.carinventory.model.Car;
-
+import org.example.carinventory.dto.CarDto;
 import java.util.List;
 
 public interface CarService {
-    List<Car> getAllCars();
+    List<CarDto> getAllCars();
 
-    Car getCarById(String id);
+    CarDto getCarById(String id);
 
-    Car createCar(Car car, HttpServletResponse response);
+    CarDto createCar(CarDto car);
 
-    Car updateCar(Car car, String id);
+    CarDto updateCar(CarDto car);
 
-    Car deleteCarById(String id);
+    CarDto deleteCarById(String id);
+
 }

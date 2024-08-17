@@ -1,11 +1,12 @@
 package org.example.carinventory.repository;
 
+import org.example.carinventory.dto.CarDto;
 import org.example.carinventory.model.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CarRepository extends JpaRepository<Car, String > {
-    Car findCarById(String id);
-    boolean findCarByMotorAndColorAndModelAndYear(String motor, String color, String model, int year);
+    CarDto findCarById(String id);
+    boolean findBySerialNumber(String serialNumber);
 }

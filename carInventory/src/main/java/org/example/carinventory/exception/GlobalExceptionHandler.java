@@ -22,4 +22,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<?> handleException(Exception e) {
+        //TODO: log to console
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An exception occurred: ");
+    }
+
 }
