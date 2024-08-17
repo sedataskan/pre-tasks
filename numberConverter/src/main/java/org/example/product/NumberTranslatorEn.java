@@ -6,7 +6,7 @@ import java.util.Objects;
 public class NumberTranslatorEn implements NumberTranslator {
 
     @Override
-    public String translate(String input) {
+    public String translate(int input) {
 
         if (Objects.equals(input, "0")){
             return "Zero";

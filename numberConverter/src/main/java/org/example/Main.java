@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.enums.Language;
 import org.example.factory.TranslatorFactory;
 import org.example.product.NumberTranslator;
 
@@ -22,7 +23,7 @@ public class Main {
         System.out.println("Your int Input: ");
         String input = scanner.nextLine();
 
-        NumberTranslator translator = TranslatorFactory.create(lang);
+        NumberTranslator translator = TranslatorFactory.create(Language.valueOf(lang));
         var result = translator.translate(input);
         System.out.println(result);
     }
