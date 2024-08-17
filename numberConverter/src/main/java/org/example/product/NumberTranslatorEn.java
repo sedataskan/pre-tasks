@@ -5,8 +5,12 @@ import java.util.Objects;
 
 public class NumberTranslatorEn implements NumberTranslator {
 
-    @Override
-    public String translate(int input) {
+    public String[] translate() {
+        return new String[]{" Point ", "Minus(-) "};
+    }
+    public String translate(int intInput) {
+
+        String input = String.valueOf(intInput);
 
         if (Objects.equals(input, "0")){
             return "Zero";
@@ -15,19 +19,16 @@ public class NumberTranslatorEn implements NumberTranslator {
         String[] ones = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
         String[] ten = {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
         String[] tens = {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
-        String[] postfix = {"", "Thousand", "Million", "Billion", "Trillion"};
+        String[] postfix = {"", "Thousand", "Million", "Billion"};
 
         var sb = new StringBuilder();
 
         if(input.contains("-")){
             input = input.replace("-", "");
-            sb.append("Minus(-)");
+            sb.append(translate()[1]);
         }
 
         var triples = NumberParser.parseAsTriple(input);
-        if (triples.size() > postfix.length) {
-            return "I cannot translate these numbers. Please enter a smaller number.";
-        }
 
         for (int i = 0; i < triples.size(); i++) {
             var digitHundred = Character.getNumericValue(triples.get(i).charAt(0));

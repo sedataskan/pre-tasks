@@ -1,5 +1,6 @@
 package org.example.product;
 
+import org.example.enums.Language;
 import org.example.factory.TranslatorFactory;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,7 @@ public class NumberTranslatorTrTest {
     void testTranslateTurkishForZero() {
 
         String expected = "Sıfır";
-        String result = TranslatorFactory.create("t").translate("0");
+        String result = TranslatorFactory.create(Language.t).translate(0);
 
         assertEquals(expected, result);
     }
@@ -19,7 +20,7 @@ public class NumberTranslatorTrTest {
     @Test
     void testTranslateTurkishForOneDigit() {
         String expected = "Üç";
-        String result = TranslatorFactory.create("t").translate("3");
+        String result = TranslatorFactory.create(Language.t).translate(3);
 
         assertEquals(expected, result);
     }
@@ -27,7 +28,7 @@ public class NumberTranslatorTrTest {
     @Test
     void testTranslateTurkishForTwoDigits() {
         String expected = "OtuzBeş";
-        String result = TranslatorFactory.create("t").translate("35");
+        String result = TranslatorFactory.create(Language.t).translate(35);
 
         assertEquals(expected, result);
     }
@@ -36,7 +37,7 @@ public class NumberTranslatorTrTest {
     void testTranslateTurkishForThreeDigits() {
 
         String expected = "ÜçYüzYirmiDört";
-        String result = TranslatorFactory.create("t").translate("324");
+        String result = TranslatorFactory.create(Language.t).translate(324);
 
         assertEquals(expected, result);
     }
@@ -45,7 +46,7 @@ public class NumberTranslatorTrTest {
     void testTranslateTurkishForFourDigits() {
 
         String expected = "İkiBinAltıYüzOnDört";
-        String result = TranslatorFactory.create("t").translate("2614");
+        String result = TranslatorFactory.create(Language.t).translate(2614);
 
         assertEquals(expected, result);
     }
@@ -54,7 +55,7 @@ public class NumberTranslatorTrTest {
     void testTranslateTurkishForFourDigits1001() {
 
         String expected = "BinBir";
-        String result = TranslatorFactory.create("t").translate("1001");
+        String result = TranslatorFactory.create(Language.t).translate(1001);
 
         assertEquals(expected, result);
     }
@@ -63,7 +64,7 @@ public class NumberTranslatorTrTest {
     void testTranslateTurkishForFiveDigits() {
 
         String expected = "YirmiBinOnBeş";
-        String result = TranslatorFactory.create("t").translate("20015");
+        String result = TranslatorFactory.create(Language.t).translate(20015);
 
         assertEquals(expected, result);
     }
@@ -71,17 +72,8 @@ public class NumberTranslatorTrTest {
     @Test
     void testTranslateTurkishForBigger() {
 
-        String expected = "BeşMilyarBeşYüzYirmiÜçMilyonDörtYüzElliYediBinAltıYüzOtuzDört";
-        String result = TranslatorFactory.create("t").translate("5523457634");
-
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void testTranslateTurkishForTooLongNumber() {
-
-        String expected = "Bu sayıları çeviremiyorum. Lütfen daha küçük bir sayı giriniz.";
-        String result = TranslatorFactory.create("t").translate("5523457634777777");
+        String expected = "İkiMilyarYüzKırkYediMilyonDörtYüzSeksenÜçBinAltıYüzKırkYedi";
+        String result = TranslatorFactory.create(Language.t).translate(2147483647);
 
         assertEquals(expected, result);
     }
@@ -89,9 +81,63 @@ public class NumberTranslatorTrTest {
     @Test
     void testTranslateTurkishForNegative() {
 
-        String expected = "Eksi(-)BeşBinKırkDokuz";
-        String result = TranslatorFactory.create("t").translate("-5049");
+        String expected = "Eksi(-) BeşBinKırkDokuz";
+        String result = TranslatorFactory.create(Language.t).translate(-5049);
 
         assertEquals(expected, result);
-        }
+    }
+
+    @Test
+    void testTranslateTurkishForFraction() {
+
+        String expected = "Bir Nokta İki";
+        String result = TranslatorFactory.create(Language.t).translate(1.2);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateTurkishForFractionZero() {
+
+        String expected = "Bir";
+        String result = TranslatorFactory.create(Language.t).translate(1.0);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateTurkishForFractionTen() {
+
+        String expected = "Bir Nokta On";
+        String result = TranslatorFactory.create(Language.t).translate(1.10);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateTurkishForFractionTwoDigits() {
+
+        String expected = "Bir Nokta YirmiÜç";
+        String result = TranslatorFactory.create(Language.t).translate(1.23);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateTurkishForFractionThreeDigits() {
+
+        String expected = "Bir Nokta YirmiDört";
+        String result = TranslatorFactory.create(Language.t).translate(1.235);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testTranslateTurkishForFractionAndNegative() {
+
+        String expected = "Eksi(-) Bir Nokta YirmiÜç";
+        String result = TranslatorFactory.create(Language.t).translate(-1.234);
+
+        assertEquals(expected, result);
+    }
 }

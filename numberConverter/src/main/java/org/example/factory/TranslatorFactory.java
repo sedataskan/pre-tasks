@@ -5,18 +5,22 @@ import org.example.product.NumberTranslator;
 import org.example.product.NumberTranslatorEn;
 import org.example.product.NumberTranslatorTr;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TranslatorFactory {
-    public static NumberTranslator create(Language language) {
-        switch (language) {
-            case ENGLISH -> {
-                return new NumberTranslatorEn();
-            }
-            case TURKISH -> {
-                return new NumberTranslatorTr();
-            }
-            default -> {
-                throw new IllegalArgumentException("Unsupported language: " + language);
-            }
+    private static final Map<Language, NumberTranslator> translators = new HashMap<>();
+
+    static {
+        translators.put(Language.e, new NumberTranslatorEn());
+        translators.put(Language.t, new NumberTranslatorTr());
+    }
+
+    public static NumberTranslator create(Language code) {
+        if (translators.containsKey(code)) {
+            return translators.get(code);
+        } else {
+            throw new IllegalArgumentException("Unsupported language: " + code);
         }
     }
 }
