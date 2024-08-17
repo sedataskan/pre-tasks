@@ -1,0 +1,119 @@
+{
+	"info": {
+		"_postman_id": "fb532d29-c926-40f1-84b1-6a6edc50253e",
+		"name": "CarInventory",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37630434"
+	},
+	"item": [
+		{
+			"name": "get All Cars",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Car by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/293436d1-44da-410f-8a33-40cbeb8f9cef",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"293436d1-44da-410f-8a33-40cbeb8f9cef"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create A Car",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"motor\": \"{{$randomLastName}}\",\r\n    \"model\": \"{{$randomFirstName}}\",\r\n    \"year\": {{$randomInt}},\r\n    \"color\": \"{{$randomColor}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update A Car",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"motor\": \"xyz\",\r\n    \"model\": \"scala\",\r\n    \"year\": 2022,\r\n    \"color\": \"grafit grey\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/293436d1-44da-410f-8a33-40cbeb8f9cef",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"293436d1-44da-410f-8a33-40cbeb8f9cef"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete A Car",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/293436d1-44da-410f-8a33-40cbeb8f9cef",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"293436d1-44da-410f-8a33-40cbeb8f9cef"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "localhost:8080/api/"
+		}
+	]
+}
