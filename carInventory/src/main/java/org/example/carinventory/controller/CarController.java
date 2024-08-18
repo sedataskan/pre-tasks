@@ -1,5 +1,6 @@
 package org.example.carinventory.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.example.carinventory.dto.CarDto;
@@ -29,7 +30,7 @@ public class CarController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<CarDto> createCar(@RequestBody CarDto car) {
+    public ResponseEntity<CarDto> createCar(@Valid @RequestBody CarDto car) {
         var created = carService.createCar(car);
         return ResponseEntity.created(URI.create(created.getId())).body(created);
 
