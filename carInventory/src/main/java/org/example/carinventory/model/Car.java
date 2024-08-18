@@ -19,9 +19,7 @@ public class Car {
     private LocalDate createdAt;
     private LocalDate updatedAt;
     private String serialNumber;
-    //TODO: createdAt ve updatedAt otomatik doldur
+    //TODO: createdAt ve updatedAt otomatik doldur *
     //TODO: yil 0 dan küçük 2040 dan büyük olamaz diye validasyon koaylım. Spring validation ile
     //TODO: Model boş olamaz  validasyon ekle. Spring validation ile
-
-
 }

@@ -8,14 +8,12 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface CarMapper {
-    //TODO: MapStruct olabilir veya manuel map yapalım
-
+    //TODO: MapStruct olabilir veya manuel map yapalım *
     //manuel hali düz şöyle -> Car objesi gelir CarDto.setEngine(Car.getEngine()) şeklinde tek tek atanır
-
     CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    CarDto carToCarDto(Car car);
+    CarDto entityToDto(Car car);
 
 }

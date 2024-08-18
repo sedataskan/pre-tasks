@@ -5,11 +5,13 @@ import org.example.carinventory.dto.CarDto;
 import org.example.carinventory.exception.CarAlreadyExistsException;
 import org.example.carinventory.exception.CarNotFoundException;
 import org.example.carinventory.exception.NoCarOnInventoryException;
+import org.example.carinventory.mapper.CarMapper;
 import org.example.carinventory.model.Car;
 import org.example.carinventory.repository.CarRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,24 +21,29 @@ public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
     private final NotificationService notificationService;
+    private final CarMapper carMapper;
 
     public List<CarDto> getAllCars() {
+        var result = new ArrayList<CarDto>();
         var cars = carRepository.findAll();
         if (cars.isEmpty()){
             throw new NoCarOnInventoryException("No car on inventory");
         }
-        return cars;
-    }
-
-    public CarDto getCarById(String id) {
-        var cars = carRepository.findAll();
-        if (cars.isEmpty()){
-            throw new CarNotFoundException("There is no car for ID: " + id);
+        for (Car car : cars) {
+            result.add(carMapper.INSTANCE.entityToDto(car));
         }
-        return carRepository.findCarById(id);
+        return result;
     }
 
-    public CarDto createCar(Car car) {
+    public CarDto getCarBySerialNumber(String serialNumber) {
+        var car = carRepository.getBySerialNumber(serialNumber);
+        if (car == null){
+            throw new CarNotFoundException("There is no car for ID: " + serialNumber);
+        }
+        return carMapper.INSTANCE.entityToDto(car);
+    }
+
+    public CarDto createCar(CarDto car) {
         boolean isInInventory = carRepository.findBySerialNumber(car.getSerialNumber());
         if (isInInventory){
             throw new CarAlreadyExistsException("Car already exists on inventory!");
@@ -49,35 +56,33 @@ public class CarServiceImpl implements CarService {
                 .engine(car.getEngine())
                 .createdAt(LocalDate.now())
                 .updatedAt(LocalDate.now())
+                .serialNumber(car.getSerialNumber())
                 .build();
         carRepository.save(newCar);
         notificationService.send("a car created with this id: " + newCar.getId());
-        //buralar mapping
-        return newCar;
+        return carMapper.INSTANCE.entityToDto(newCar);
     }
 
-    public CarDto updateCar(Car car) {
-        if (carRepository.findCarById(car.getId()) == null) {
-            throw new CarNotFoundException("There is no car for ID: " + car.getId());
+    public CarDto updateCar(CarDto car) {
+        if (!carRepository.findBySerialNumber(car.getSerialNumber())) {
+            throw new CarNotFoundException("There is no car for this Serial Number: " + car.getSerialNumber());
         }
-        var newCar = Car.builder()
-                .id(car.getId())
+        var updatedCar = Car.builder()
                 .model(car.getModel())
                 .year(car.getYear())
                 .color(car.getColor())
                 .engine(car.getEngine())
+                .updatedAt(LocalDate.now())
                 .build();
-        carRepository.save(newCar);
-        //buralarda mapping olucak
-        return newCar;
+        carRepository.save(updatedCar);
+        return carMapper.INSTANCE.entityToDto(updatedCar);
     }
 
-    public CarDto deleteCarById(String id) {
-        var car = carRepository.findCarById(id);
+    public void deleteCarBySerialNumber(String serialNumber) {
+        var car = carRepository.getBySerialNumber(serialNumber);
         if (car == null) {
-            throw new CarNotFoundException("There is no car for ID: " + id);
+            throw new CarNotFoundException("There is no car for Serial Number: " + serialNumber);
         }
-        carRepository.deleteById(id);
-        return car;
+        carRepository.delete(car);
     }
 }

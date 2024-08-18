@@ -9,4 +9,5 @@ public class CarDto {
     private String color;
     private String engine;
     private int year;
+    private String serialNumber;
 }

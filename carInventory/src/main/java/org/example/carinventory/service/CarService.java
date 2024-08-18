@@ -6,12 +6,12 @@ import java.util.List;
 public interface CarService {
     List<CarDto> getAllCars();
 
-    CarDto getCarById(String id);
+    CarDto getCarBySerialNumber(String id);
 
     CarDto createCar(CarDto car);
 
     CarDto updateCar(CarDto car);
 
-    CarDto deleteCarById(String id);
+    void deleteCarBySerialNumber(String serialNumber);
 
 }
