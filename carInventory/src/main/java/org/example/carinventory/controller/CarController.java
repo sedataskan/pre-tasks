@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/Car")
+@RequestMapping("/api/car")
 @RequiredArgsConstructor
 public class CarController {
 

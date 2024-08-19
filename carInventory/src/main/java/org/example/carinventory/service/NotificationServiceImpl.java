@@ -11,6 +11,6 @@ public class NotificationServiceImpl implements NotificationService {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public void send(String msg) {
-        kafkaTemplate.send("car-topic", msg);
+        kafkaTemplate.send("car", msg);
     }
 }

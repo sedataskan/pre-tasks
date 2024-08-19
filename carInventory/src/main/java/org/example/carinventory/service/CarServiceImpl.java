@@ -30,7 +30,7 @@ public class CarServiceImpl implements CarService {
             throw new NoCarOnInventoryException("No car on inventory");
         }
         for (Car car : cars) {
-            result.add(carMapper.INSTANCE.entityToDto(car));
+            result.add(carMapper.entityToDto(car));
         }
         return result;
     }
@@ -40,14 +40,14 @@ public class CarServiceImpl implements CarService {
         if (car == null){
             throw new CarNotFoundException("There is no car for ID: " + serialNumber);
         }
-        return carMapper.INSTANCE.entityToDto(car);
+        return CarMapper.INSTANCE.entityToDto(car);
     }
 
     public CarDto createCar(CarDto car) {
-        boolean isInInventory = carRepository.findBySerialNumber(car.getSerialNumber());
-        if (isInInventory){
-            throw new CarAlreadyExistsException("Car already exists on inventory!");
-        }
+//        var isInInventory = carRepository.findBySerialNumber(car.getSerialNumber());
+//        if (isInInventory){
+//            throw new CarAlreadyExistsException("Car already exists on inventory!");
+//        }
         var newCar = Car.builder()
                 .id(UUID.randomUUID().toString())
                 .model(car.getModel())
@@ -60,7 +60,7 @@ public class CarServiceImpl implements CarService {
                 .build();
         carRepository.save(newCar);
         notificationService.send("a car created with this id: " + newCar.getId());
-        return carMapper.INSTANCE.entityToDto(newCar);
+        return CarMapper.INSTANCE.entityToDto(newCar);
     }
 
     public CarDto updateCar(CarDto car) {
@@ -75,7 +75,7 @@ public class CarServiceImpl implements CarService {
                 .updatedAt(LocalDate.now())
                 .build();
         carRepository.save(updatedCar);
-        return carMapper.INSTANCE.entityToDto(updatedCar);
+        return CarMapper.INSTANCE.entityToDto(updatedCar);
     }
 
     public void deleteCarBySerialNumber(String serialNumber) {
