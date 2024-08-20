@@ -32,8 +32,7 @@ public class CarController {
     @PostMapping("/")
     public ResponseEntity<CarDto> createCar(@Valid @RequestBody CarDto car) {
         var created = carService.createCar(car);
-        return ResponseEntity.created(URI.create(created.getId())).body(created);
-
+        return ResponseEntity.created(URI.create("api/car/" + "created.getId()")).body(created);
     }
 
     @PutMapping("/{serialNumber}")

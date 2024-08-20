@@ -40,42 +40,43 @@ public class CarServiceImpl implements CarService {
         if (car == null){
             throw new CarNotFoundException("There is no car for ID: " + serialNumber);
         }
-        return CarMapper.INSTANCE.entityToDto(car);
+        return car;
     }
 
-    public CarDto createCar(CarDto car) {
-//        var isInInventory = carRepository.findBySerialNumber(car.getSerialNumber());
-//        if (isInInventory){
-//            throw new CarAlreadyExistsException("Car already exists on inventory!");
-//        }
-        var newCar = Car.builder()
-                .id(UUID.randomUUID().toString())
-                .model(car.getModel())
-                .year(car.getYear())
-                .color(car.getColor())
-                .engine(car.getEngine())
-                .createdAt(LocalDate.now())
-                .updatedAt(LocalDate.now())
-                .serialNumber(car.getSerialNumber())
-                .build();
-        carRepository.save(newCar);
-        notificationService.send("a car created with this id: " + newCar.getId());
-        return CarMapper.INSTANCE.entityToDto(newCar);
-    }
-
-    public CarDto updateCar(CarDto car) {
-        if (!carRepository.findBySerialNumber(car.getSerialNumber())) {
-            throw new CarNotFoundException("There is no car for this Serial Number: " + car.getSerialNumber());
+    public CarDto createCar(CarDto cardto) {
+        if (cardto == null || cardto.getSerialNumber() == null) {
+            throw new IllegalArgumentException("Car or SerialNumber cannot be null");
         }
-        var updatedCar = Car.builder()
-                .model(car.getModel())
-                .year(car.getYear())
-                .color(car.getColor())
-                .engine(car.getEngine())
-                .updatedAt(LocalDate.now())
-                .build();
-        carRepository.save(updatedCar);
-        return CarMapper.INSTANCE.entityToDto(updatedCar);
+
+        var existingCar = carRepository.getBySerialNumber(cardto.getSerialNumber());
+        if (existingCar != null){
+            throw new CarAlreadyExistsException("Car already exists!");
+        }
+        Car car = carMapper.dtoToEntity(cardto);
+        car.setId(UUID.randomUUID().toString());
+        car.setCreatedAt(LocalDate.now());
+        car.setUpdatedAt(LocalDate.now());
+
+        var newCar = carRepository.save(car);
+
+        notificationService.send("a car created with this id: " + newCar.getId());
+
+        return carMapper.entityToDto(newCar);
+    }
+
+    public CarDto updateCar(CarDto cardto) {
+        if (carRepository.findBySerialNumber(cardto.getSerialNumber()) == null) {
+            throw new CarNotFoundException("There is no car for this Serial Number: " + cardto.getSerialNumber());
+        }
+        Car oldCar = carMapper.dtoToEntity(carRepository.findBySerialNumber(cardto.getSerialNumber()));
+        oldCar.setUpdatedAt(LocalDate.now());
+        oldCar.setModel(cardto.getModel());
+        oldCar.setYear(cardto.getYear());
+        oldCar.setEngine(cardto.getEngine());
+
+        Car updatedCar = carRepository.save(oldCar);
+        notificationService.send("a car updated with this id: " + updatedCar.getId());
+        return carMapper.entityToDto(updatedCar);
     }
 
     public void deleteCarBySerialNumber(String serialNumber) {
@@ -83,6 +84,6 @@ public class CarServiceImpl implements CarService {
         if (car == null) {
             throw new CarNotFoundException("There is no car for Serial Number: " + serialNumber);
         }
-        carRepository.delete(car);
+        carRepository.delete(carMapper.dtoToEntity(car));
     }
 }

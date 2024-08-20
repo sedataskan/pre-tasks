@@ -28,10 +28,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<?> handleException(Exception e) {
+    public void handleException(Exception e) {
         //TODO: log to console *
         LOGGER.error("An exception occurred: ", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An exception occurred: ");
     }
 
 }

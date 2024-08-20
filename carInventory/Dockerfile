@@ -13,6 +13,6 @@ RUN mvn clean install
 
 # Use a smaller image to run the application
 FROM openjdk:22
-ADD target/carInventory-0.0.1-SNAPSHOT.jar carInventory.jar
+COPY --from=build /app/target/carInventory-0.0.1-SNAPSHOT.jar carInventory.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "carInventory.jar"]
